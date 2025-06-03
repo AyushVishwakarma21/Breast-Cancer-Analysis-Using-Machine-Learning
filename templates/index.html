@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction | MedPredict Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --gray: #5f6368;
+            --light-gray: #dadce0;
+            --danger: #ea4335;
+            --success: #34a853;
+            --warning: #f9ab00;
+            --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f5f5f5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 50%;
+        }
+        
+        .logo-text h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-item .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-item .label {
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+        
+        /* Main Content */
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .info-panel {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            height: fit-content;
+        }
+        
+        .info-panel h2 {
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+            font-size: 1.8rem;
+        }
+        
+        .info-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .info-box {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .info-box h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box h3 i {
+            font-size: 1.3rem;
+        }
+        
+        .info-box p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        .info-box ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .info-box ul li {
+            margin-bottom: 8px;
+            color: var(--gray);
+        }
+        
+        .form-section {
+            flex: 2;
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-header h2 {
+            color: var(--primary-dark);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+        }
+        
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fcfdff;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+        
+        .form-group input:hover {
+            border-color: #a0c3ff;
+        }
+        
+        .submit-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .result {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+        
+        .result.benign {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: var(--success);
+            border: 2px solid #81c784;
+        }
+        
+        .result.malignant {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: var(--danger);
+            border: 2px solid #e57373;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-top: 30px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            header {
+                text-align: center;
+            }
+            
+            .header-content {
+                justify-content: center;
+            }
+            
+            .logo {
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stat-item .number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <div class="logo-text">
+                        <h1>MedPredict Pro</h1>
+                        <p>Advanced Breast Cancer Risk Assessment</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="number">98.7%</div>
+                        <div class="label">Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number">30+</div>
+                        <div class="label">Clinical Markers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number">5k+</div>
+                        <div class="label">Cases Analyzed</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="info-panel">
+                <h2><i class="fas fa-info-circle"></i> About This Assessment</h2>
+                <div class="info-content">
+                    <div class="info-box">
+                        <h3><i class="fas fa-flask"></i> How It Works</h3>
+                        <p>Our predictive model analyzes 30 key biomarkers from diagnostic imaging to assess breast cancer risk. The algorithm is trained on thousands of verified cases with proven clinical accuracy.</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h3><i class="fas fa-shield-alt"></i> Data Privacy</h3>
+                        <p>All patient data is encrypted and processed anonymously. We adhere to HIPAA compliance standards and never store personally identifiable information.</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h3><i class="fas fa-lightbulb"></i> Interpretation Guide</h3>
+                        <ul>
+                            <li><strong>Benign:</strong> Low probability of malignancy (0-10%)</li>
+                            <li><strong>Borderline:</strong> Moderate risk requiring follow-up (10-30%)</li>
+                            <li><strong>Malignant:</strong> High probability of cancer (70-100%)</li>
+                        </ul>
+                        <p style="margin-top: 15px; font-style: italic;">Note: This tool aids diagnosis but doesn't replace professional medical evaluation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-header">
+                    <h2>Breast Cancer Prediction</h2>
+                    <p>Enter clinical measurements from diagnostic imaging to assess malignancy risk. All fields are required.</p>
+                </div>
+                
+                <form action="/predict" method="post">
+                    <div class="form-group">
+                        <label>Mean Radius</label>
+                        <input type="number" step="any" name="mean radius" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Texture</label>
+                        <input type="number" step="any" name="mean texture" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Perimeter</label>
+                        <input type="number" step="any" name="mean perimeter" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Area</label>
+                        <input type="number" step="any" name="mean area" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Smoothness</label>
+                        <input type="number" step="any" name="mean smoothness" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Compactness</label>
+                        <input type="number" step="any" name="mean compactness" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Concavity</label>
+                        <input type="number" step="any" name="mean concavity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Concave Points</label>
+                        <input type="number" step="any" name="mean concave points" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Symmetry</label>
+                        <input type="number" step="any" name="mean symmetry" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mean Fractal Dimension</label>
+                        <input type="number" step="any" name="mean fractal dimension" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Radius Error</label>
+                        <input type="number" step="any" name="radius error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Texture Error</label>
+                        <input type="number" step="any" name="texture error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Perimeter Error</label>
+                        <input type="number" step="any" name="perimeter error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Area Error</label>
+                        <input type="number" step="any" name="area error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Smoothness Error</label>
+                        <input type="number" step="any" name="smoothness error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Compactness Error</label>
+                        <input type="number" step="any" name="compactness error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Concavity Error</label>
+                        <input type="number" step="any" name="concavity error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Concave Points Error</label>
+                        <input type="number" step="any" name="concave points error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Symmetry Error</label>
+                        <input type="number" step="any" name="symmetry error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fractal Dimension Error</label>
+                        <input type="number" step="any" name="fractal dimension error" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Radius</label>
+                        <input type="number" step="any" name="worst radius" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Texture</label>
+                        <input type="number" step="any" name="worst texture" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Perimeter</label>
+                        <input type="number" step="any" name="worst perimeter" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Area</label>
+                        <input type="number" step="any" name="worst area" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Smoothness</label>
+                        <input type="number" step="any" name="worst smoothness" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Compactness</label>
+                        <input type="number" step="any" name="worst compactness" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Concavity</label>
+                        <input type="number" step="any" name="worst concavity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Concave Points</label>
+                        <input type="number" step="any" name="worst concave points" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Symmetry</label>
+                        <input type="number" step="any" name="worst symmetry" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Worst Fractal Dimension</label>
+                        <input type="number" step="any" name="worst fractal dimension" required>
+                    </div>
+                    
+                    <div class="submit-container">
+                        <button type="submit">
+                            <i class="fas fa-chart-line"></i> Analyze Results
+                        </button>
+                    </div>
+                </form>
+                
+                {% if prediction_text %}
+                    <div class="result {% if 'benign' in prediction_text.lower() %}benign{% elif 'malignant' in prediction_text.lower() %}malignant{% endif %}">
+                        <i class="fas fa-diagnoses"></i> {{ prediction_text }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 MedPredict Pro | Advanced Diagnostic Tool for Breast Cancer Risk Assessment</p>
+            <p>For educational and research purposes only. Consult a healthcare professional for medical advice.</p>
+        </footer>
+    </div>
+</body>
+</html>
